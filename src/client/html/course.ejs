@@ -1,0 +1,25 @@
+<%- include('common/header.ejs') %>
+
+<div class="container empty-background">
+    <nav class="nav">
+        <p class="title">용계역 여행</p>
+        <div class="sub-title">코스 리스트</div>
+    </nav>
+
+    <div class="content-container">
+        <!-- 코스 리스트 아이콘 -->
+        <ul id="courseWrap" class="course-nav-ul"></ul>
+            <!-- 카카오지도 -->
+            <div id="location-map"></div>
+        
+    </div>
+</div>
+
+<%- include('common/footer.ejs') %>
+<!-- 카카오지도 api사용 자바스크립트 파일 -->
+<script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=72bbd5f896762b703c65a08c44219108"></script>
+<script src="/js/course.js"></script>
+"></script>
+
+</body>
+</html>

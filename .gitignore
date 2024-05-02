@@ -1,0 +1,6 @@
+# 암호파일
+.env
+# 라이브러리코드
+node_modules
+# VSCode
+.vscode
