@@ -5,7 +5,7 @@ import { getCourseList } from "./controller/courseController.js";
 
 const app = express();
 
-const PORT = 8001;
+const PORT = 8000;
 
 // 서버 오픈 - 서버 계속 돌려돌려
 app.listen(PORT, () => {

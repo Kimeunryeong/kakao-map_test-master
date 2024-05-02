@@ -6,6 +6,39 @@ let userLongitude;
 let isMapDrawn = false;
 let courseData = [];
 let markers = [];
+let clickCourse;
+
+const panTo = (latitude, longitude) => {
+  const position = new kakao.maps.LatLng(latitude, longitude);
+  map.panTo(position);
+};
+
+const clickCourseList = (e, courseNo) => {
+  if (clickCourse !== courseNo) {
+    // li 로 작성된 class course불러오기
+    const courseWrap = document.querySelectorAll(".course");
+    for (let i = 0; i < courseWrap.length; i++) {
+      courseWrap[i].classList.remove("on");
+    }
+    // 클릭된 버튼 색 설정하기
+    e.currentTarget.classList.add("on");
+    let courseLatitude;
+    let courseLongitude;
+
+    if (courseNo === 0) {
+      courseLatitude = userLatitude;
+      courseLongitude = userLongitude;
+    } else {
+      let matchCourse = courseData.find((c) => c.course_no === courseNo);
+      courseLatitude = matchCourse.course_latitude;
+      courseLongitude = matchCourse.course_longitude;
+    }
+
+    panTo(courseLatitude, courseLongitude);
+    clickCourse = courseNo;
+  }
+};
+
 // 마커를 그리는 함수
 const addMarker = (position) => {
   let marker = new kakao.maps.Marker({
@@ -53,7 +86,7 @@ const drawMap = (latitude, longitude) => {
   // 1번째 인자: 지도 그림 DOM (HTML) . 지도 그리기
   map = new kakao.maps.Map(locationMap, {
     center: new kakao.maps.LatLng(latitude, longitude),
-    level: 5,
+    level: 3,
   });
   map.setZoomable(false);
 };
@@ -64,6 +97,7 @@ const configLocation = () => {
     navigator.geolocation.watchPosition((pos) => {
       userLatitude = pos.coords.latitude;
       userLongitude = pos.coords.longitude;
+      // delMarker();
 
       if (!isMapDrawn) {
         // 지도그리기
@@ -75,6 +109,9 @@ const configLocation = () => {
         isMapDrawn = true;
       }
       addMarker(new kakao.maps.LatLng(userLatitude, userLongitude));
+      if (clickCourse === 0) {
+        panTo(userLatitude, userLongitude);
+      }
     });
   }
 };
@@ -82,12 +119,18 @@ const configLocation = () => {
 const makeCourseNaviHTML = (data) => {
   const courseWrap = document.getElementById("courseWrap");
   let html = "";
-  for (let i = 0; i < data.length; i++) {
-    html += `<li class="course">`;
-    html += `<p>${data[i].course_name}</p>`;
-    html += `</li>`;
-  }
-  html += `<li id="myPosition" class="course on">나의 위치</li>`;
+
+  data.forEach(
+    (data) =>
+      (html += `<li class ="course" onclick="clickCourseList(event, ${data.course_no})"> <p>${data.course_name}</p></li>`)
+  );
+  // for (let i = 0; i < data.length; i++) {
+  //   console.log(data[i])
+  //   html += `<li class="course" onclick="clickCourseList(event, ${data[i].course_no})>`;
+  //   html += `<p>${data[i].course_name}</p>`;
+  //   html += `</li>`;
+  // }
+  html += `<li id="myPosition" class="course on" onclick="clickCourseList(event, 0)">나의 위치</li>`;
   courseWrap.innerHTML = html;
 };
 
